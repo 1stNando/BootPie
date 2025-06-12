@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.BootPie.models.Pie;
 import com.revature.BootPie.services.PieService;
 @SpringBootApplication
-@RestController
+
 public class BootPieApplication {
 
 	@Value("${spring.application.name}")
@@ -22,16 +22,6 @@ public class BootPieApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BootPieApplication.class, args);}
-
-		// Http GET
-		@GetMapping
-		public String piePickerHttp(PieService pieService) {
-				Pie randomPie = pieService.getRandomPie();
-
-				return String.format("The pie selected for you is %s with calories equal to %d with %d slices left!", randomPie.getPieName(),
-				randomPie.getCalories(),
-				randomPie.getSlicesAvailable()); 
-		}
 
 		@Bean
 		public CommandLineRunner inspectorBean(ApplicationContext applicationContext) {
@@ -43,23 +33,10 @@ public class BootPieApplication {
 					Arrays.sort(beans);
 
 					for(String bean: beans) {
-						if(bean.contains("pie") || bean.contains("inspector"))
+						// if(bean.contains("pie") || bean.contains("inspector"))
 							System.out.println(bean);
 					}
 					System.out.println("Ending our inspection...");
-			};
-		}
-
-		@Bean
-		public CommandLineRunner piePickerBean(PieService pieService) {
-			return args -> {
-				Pie randomPie = pieService.getRandomPie();
-
-				System.out.printf("The pie selected for you is %s with calories equal to %d with %d slices left!", randomPie.getPieName(),
-				randomPie.getCalories(),
-				randomPie.getSlicesAvailable()).println(); 
-				
-				
 			};
 		}
 	}
