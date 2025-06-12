@@ -9,6 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.revature.BootPie.models.Pie;
+import com.revature.BootPie.services.PieService;
+
+
+
+
 @SpringBootApplication
 public class BootPieApplication {
 
@@ -28,9 +34,23 @@ public class BootPieApplication {
 					Arrays.sort(beans);
 
 					for(String bean: beans) {
-						System.out.println(bean);
+						if(bean.contains("pie") || bean.contains("inspector"))
+							System.out.println(bean);
 					}
 					System.out.println("Ending our inspection...");
+			};
+		}
+
+		@Bean
+		public CommandLineRunner piePickerBean(PieService pieService) {
+			return args -> {
+				Pie randomPie = pieService.getRandomPie();
+
+				System.out.printf("The pie selected for you is %s with calories equal to %d with %d slices left!", randomPie.getPieName(),
+				randomPie.getCalories(),
+				randomPie.getSlicesAvailable()).println(); 
+				
+				
 			};
 		}
 	}
