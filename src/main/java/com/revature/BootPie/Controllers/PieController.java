@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.revature.BootPie.Exceptions.ResourceNotFoundException;
 import com.revature.BootPie.models.Pie;
 import com.revature.BootPie.services.PieService;
 
@@ -37,13 +38,20 @@ public class PieController {
 
   // Not working properly
   @GetMapping(params = "pieName")
-  public @ResponseBody ResponseEntity<Pie> findPie(@RequestParam String pieName) {
-      return new ResponseEntity<>(pieService.findPie(pieName), HttpStatus.ACCEPTED);
+  public @ResponseBody ResponseEntity<?> findPie(@RequestParam String pieName) {
+    try {
+        Pie foundPie = pieService.findPie(pieName);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(foundPie);
+    } catch (ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
+  // public @ResponseBody ResponseEntity<Pie> findPie(@RequestParam String pieName) {
+  //     return new ResponseEntity<>(pieService.findPie(pieName), HttpStatus.ACCEPTED);
 
-  }
+  // }
 
-  // Not working properly
-  // Path variable "limit"
+
   @GetMapping("calories/{limit}")
   public @ResponseBody ResponseEntity<List<Pie>> findPiesByCalories(@PathVariable int limit) {
     List<Pie> caloriePieList = pieService.getPiesByCalories(limit);
@@ -51,8 +59,7 @@ public class PieController {
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(caloriePieList);
   }
 
-  // Not working properly
-  // Delete a pie
+  
   @DeleteMapping("delete/{pieName}")
   public @ResponseBody ResponseEntity<String> deletePie(@PathVariable String pieName) {
     pieService.deletePie(pieName);
