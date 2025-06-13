@@ -1,82 +1,80 @@
-package com.revature.BootPie.services;
+package com.revature.BootPie.Services;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.BootPie.Exceptions.ResourceNotFoundException;
-import com.revature.BootPie.models.Pie;
+import com.revature.BootPie.Models.Pie;
+import com.revature.BootPie.Repositories.PieRepository;
 
 // CRUD implementation
 @Service
 public class PieService {
   
-  private List<Pie> pieList = new ArrayList<>();
+  // private List<Pie> pieList = new ArrayList<>();
 
-  {
-    Pie pie1 = new Pie("Cherry", 800, 6);
-    Pie pie2 = new Pie("Apple", 700, 3);
-    Pie pie3 = new Pie("BootPie", 100000, 8);
+  // {
+  //   Pie pie1 = new Pie("Cherry", 800, 6);
+  //   Pie pie2 = new Pie("Apple", 700, 3);
+  //   Pie pie3 = new Pie("BootPie", 100000, 8);
 
-    pieList.add(pie1);
-    pieList.add(pie2);
-    pieList.add(pie3);
+  //   pieList.add(pie1);
+  //   pieList.add(pie2);
+  //   pieList.add(pie3);
+  // }
+
+  // JpaRepository/CrudRepository
+  private PieRepository pieRepository;
+
+  @Autowired
+  public PieService(PieRepository pieRepository) {
+    this.pieRepository = pieRepository;
   }
 
-  public Pie getRandomPie() {
-    int randomInt = new Random().nextInt(pieList.size());
-
-    return pieList.get(randomInt);
+  public List<Pie> getPieList() {
+    return (List<Pie>) pieRepository.findAll();
   }
 
-  public List<Pie> getPieList() {return pieList;}
-
+  
   public Pie findPie(String pieName) throws ResourceNotFoundException {
-    for(Pie pie:pieList) {
-      if(pie.getPieName().equals(pieName))
-          return pie;
-    }
-    throw new ResourceNotFoundException((pieName + " was not found. Please check name or try another."));
+      return pieRepository.findById(pieName)
+              .orElseThrow(() -> new ResourceNotFoundException(pieName + "was not found. Please check name or try another."));
+    
   };
 
+  // Todo: Create custom query
   public List<Pie> getPiesByCalories(int limit) throws ResourceNotFoundException {
     List<Pie> caloriePieList = new ArrayList<>();
 
-    for(Pie pie:pieList) {
-      if(pie.getCalories() <= limit) 
-        caloriePieList.add(pie);
-    }
-    if(caloriePieList.isEmpty()) throw new ResourceNotFoundException("No pies exist with calories equal to or lower than " + limit);
+    
+    //if(caloriePieList.isEmpty()) throw new ResourceNotFoundException("No pies exist with calories equal to or lower than " + limit);
 
     return caloriePieList;
   }
 
   public void deletePie(String pieName) {
-    pieList.removeIf(pie -> pie.getPieName().equals(pieName));
+    pieRepository.deleteById(pieName);
   }
 
   public void patchPie(String pieName, int calories, int slicesAvailable) throws ResourceNotFoundException {
-    for(Pie pie:pieList) {
-      if(pie.getPieName().equals(pieName)) {
+    Pie pie = pieRepository.findById(pieName)
+          .orElseThrow(() -> new ResourceNotFoundException(pieName + " was not found. Please check name and try another."));
         if(calories > 0) pie.setCalories(calories);
         if(slicesAvailable > 0) pie.setSlicesAvailable(slicesAvailable);
-        return;
-      }
+        pieRepository.save(pie);
     }
-    throw new ResourceNotFoundException(pieName + " was not found. Please check name or try another.");
-  }
 
   public void updatePie(Pie updatedPie) throws ResourceNotFoundException {
-    if(pieList.removeIf(pie -> pie.getPieName().equals(updatedPie.getPieName()))) {
-      pieList.add(updatedPie);
-      return;
-    }
-    throw new ResourceNotFoundException(updatedPie.getPieName() + " was not found. Please check name and try another.");
+    Pie pie = pieRepository.findById(updatedPie.getPieName())
+          .orElseThrow(() -> new ResourceNotFoundException(updatedPie.getPieName() + " was not found. Please check name and try another."));
+        pieRepository.save(pie);
   }
 
   public void addNewPie(Pie newPie) {
-    pieList.add(newPie);
+    pieRepository.save(newPie);
   }
 }

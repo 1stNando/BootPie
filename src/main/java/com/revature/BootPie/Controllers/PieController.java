@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.revature.BootPie.Exceptions.ResourceNotFoundException;
-import com.revature.BootPie.models.Pie;
-import com.revature.BootPie.services.PieService;
+import com.revature.BootPie.Models.Pie;
+import com.revature.BootPie.Services.PieService;
 
 @Controller
 @RequestMapping("pie")

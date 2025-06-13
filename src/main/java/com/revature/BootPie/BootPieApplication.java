@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.BootPie.models.Pie;
-import com.revature.BootPie.services.PieService;
+import com.revature.BootPie.Models.Pie;
+import com.revature.BootPie.Services.PieService;
 @SpringBootApplication
 
 public class BootPieApplication {

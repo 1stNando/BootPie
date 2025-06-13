@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.BootPie.models.Consumer;
-import com.revature.BootPie.services.ConsumerService;
+import com.revature.BootPie.Models.Consumer;
+import com.revature.BootPie.Services.ConsumerService;
 
 @RestController
 @RequestMapping("consumer")

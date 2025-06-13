@@ -1,4 +1,4 @@
-package com.revature.BootPie.models;
+package com.revature.BootPie.Models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

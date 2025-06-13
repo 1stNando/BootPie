@@ -1,4 +1,4 @@
-package com.revature.BootPie.services;
+package com.revature.BootPie.Services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.BootPie.Exceptions.ResourceNotFoundException;
-import com.revature.BootPie.models.Consumer;
+import com.revature.BootPie.Models.Consumer;
 
 @Service
 public class ConsumerService {
