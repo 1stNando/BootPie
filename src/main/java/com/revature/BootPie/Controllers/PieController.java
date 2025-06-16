@@ -2,6 +2,7 @@ package com.revature.BootPie.Controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class PieController {
   
   private PieService pieService;
 
+  @Autowired
   public PieController(PieService pieService) {
     this.pieService = pieService;
   }
@@ -36,9 +38,9 @@ public class PieController {
     return pieService.getPieList();
   }
 
-  // Not working properly
-  @GetMapping(params = "pieName")
-  public @ResponseBody ResponseEntity<?> findPie(@RequestParam String pieName) {
+  // GET http://localhost:8080/pie/Apple
+  @GetMapping("{pieName}")
+  public @ResponseBody ResponseEntity<?> findPie(@PathVariable String pieName) {
     try {
         Pie foundPie = pieService.findPie(pieName);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(foundPie);
@@ -68,7 +70,7 @@ public class PieController {
 
   
   @PatchMapping
-  public @ResponseBody ResponseEntity<String> pathPie(@RequestParam String pieName, @RequestParam(defaultValue = "0", required = false) int calories,
+  public @ResponseBody ResponseEntity<String> patchPie(@RequestParam String pieName, @RequestParam(defaultValue = "0", required = false) int calories,
    @RequestParam(defaultValue = "0", required = false) int slicesAvailable) {
     
     pieService.patchPie(pieName, calories, slicesAvailable);
